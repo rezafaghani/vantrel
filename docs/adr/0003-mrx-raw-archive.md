@@ -10,8 +10,10 @@ Provider payloads must be recoverable byte-for-byte for replay, evidence, debugg
 
 Define Market Raw eXchange, MRX, as Vantrel's raw archival format for compressed framed provider payloads.
 
+The draft v0 format is specified in [MRX v0 Specification](../specs/mrx-v0.md).
+
 ## Consequences
 
 - Raw archival is independent from normalized market storage.
 - MRX does not replace Protobuf, Arrow, Parquet or QuestDB.
-- A detailed MRX v0 specification is deferred to Task 2.
+- Implementation is deferred to a focused language/library task.
