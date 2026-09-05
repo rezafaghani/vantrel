@@ -53,7 +53,7 @@ Vantrel is designed around:
 - Observability
 - Kubernetes operations
 
-See [docs/architecture/platform-architecture.md](docs/architecture/platform-architecture.md) for the intended high-level platform architecture, [docs/adr](docs/adr) for architecture decisions, and [docs/specs/mrx-v0.md](docs/specs/mrx-v0.md) for the draft MRX raw archive specification.
+See [docs/architecture/platform-architecture.md](docs/architecture/platform-architecture.md) for the intended high-level platform architecture, [docs/adr](docs/adr) for architecture decisions, [docs/specs/mrx-v0.md](docs/specs/mrx-v0.md) for the draft MRX raw archive specification, and [libs/go/mrx](libs/go/mrx) for the initial Go MRX reference library.
 
 ## Development Workflow
 
