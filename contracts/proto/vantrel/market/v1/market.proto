@@ -1,0 +1,124 @@
+syntax = "proto3";
+
+package vantrel.market.v1;
+
+option go_package = "github.com/rezafaghani/vantrel/contracts/gen/go/vantrel/market/v1;marketv1";
+
+message EventEnvelope {
+  string event_id = 1;
+  string trace_id = 2;
+  string correlation_id = 3;
+  string ingestion_id = 4;
+  string raw_record_id = 5;
+  string series_id = 6;
+  int64 observed_at_unix_nanos = 7;
+  int64 published_at_unix_nanos = 8;
+  string source_id = 9;
+  string provider_id = 10;
+
+  reserved 100 to 199;
+}
+
+message Money {
+  string currency = 1;
+  int64 units = 2;
+  int32 nanos = 3;
+}
+
+message Quantity {
+  double value = 1;
+  string unit = 2;
+}
+
+message Trade {
+  EventEnvelope envelope = 1;
+  string instrument_id = 2;
+  string venue = 3;
+  Money price = 4;
+  Quantity quantity = 5;
+  string trade_id = 6;
+  string aggressor_side = 7;
+  int64 trade_time_unix_nanos = 8;
+
+  reserved 100 to 199;
+}
+
+message Quote {
+  EventEnvelope envelope = 1;
+  string instrument_id = 2;
+  string venue = 3;
+  Money bid_price = 4;
+  Quantity bid_quantity = 5;
+  Money ask_price = 6;
+  Quantity ask_quantity = 7;
+  int64 quote_time_unix_nanos = 8;
+
+  reserved 100 to 199;
+}
+
+message OrderBookDelta {
+  EventEnvelope envelope = 1;
+  string instrument_id = 2;
+  string venue = 3;
+  uint64 sequence = 4;
+  repeated OrderBookLevelChange changes = 5;
+  uint64 previous_sequence = 6;
+  string checksum = 7;
+
+  reserved 100 to 199;
+}
+
+message OrderBookLevelChange {
+  string side = 1;
+  Money price = 2;
+  Quantity quantity = 3;
+  string action = 4;
+}
+
+message OrderBookSnapshot {
+  EventEnvelope envelope = 1;
+  string instrument_id = 2;
+  string venue = 3;
+  uint64 sequence = 4;
+  repeated OrderBookLevel bids = 5;
+  repeated OrderBookLevel asks = 6;
+  string checksum = 7;
+
+  reserved 100 to 199;
+}
+
+message OrderBookLevel {
+  Money price = 1;
+  Quantity quantity = 2;
+}
+
+message ForecastObservation {
+  EventEnvelope envelope = 1;
+  string forecast_run_id = 2;
+  int64 issued_at_unix_nanos = 3;
+  int64 target_time_unix_nanos = 4;
+  int64 horizon_seconds = 5;
+  double value = 6;
+  string unit = 7;
+  string model_or_provider_version = 8;
+  Quality quality = 9;
+
+  reserved 100 to 199;
+}
+
+message ActualObservation {
+  EventEnvelope envelope = 1;
+  int64 event_time_unix_nanos = 2;
+  double value = 3;
+  string unit = 4;
+  Quality quality = 5;
+  uint64 revision = 6;
+
+  reserved 100 to 199;
+}
+
+message Quality {
+  string state = 1;
+  double score = 2;
+  repeated string flags = 3;
+}
