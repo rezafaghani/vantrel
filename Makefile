@@ -33,3 +33,8 @@ helm-install: k8s-check-tools
 .PHONY: k8s-status
 k8s-status:
 	kubectl get namespaces -l app.kubernetes.io/part-of=vantrel
+
+.PHONY: proto-check
+proto-check:
+	python3 tools/check_proto_compat.py
+	python3 -m unittest tools/check_proto_compat_test.py
