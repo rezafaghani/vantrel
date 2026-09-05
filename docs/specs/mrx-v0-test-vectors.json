@@ -1,0 +1,30 @@
+{
+  "version": 0,
+  "vectors": [
+    {
+      "name": "single_frame_none",
+      "description": "One uncompressed frame containing a provider JSON payload.",
+      "compression": "NONE",
+      "payload_utf8": "{\"price\":42.5,\"symbol\":\"AAPL\"}",
+      "payload_hex": "7b227072696365223a34322e352c2273796d626f6c223a224141504c227d",
+      "expected_payload_crc32c_hex": "c26d4ad2",
+      "expected_behavior": "Reader returns one payload byte-identical to payload_hex and reports CLEAN when footer is present."
+    },
+    {
+      "name": "missing_footer_recoverable",
+      "description": "A valid complete frame without a footer.",
+      "compression": "NONE",
+      "payload_utf8": "SEQ=100\n",
+      "payload_hex": "5345513d3130300a",
+      "expected_payload_crc32c_hex": "8f81a4e8",
+      "expected_behavior": "Reader returns the complete frame and reports UNCLEAN_RECOVERABLE."
+    },
+    {
+      "name": "unsupported_compression",
+      "description": "Frame uses private compression ID 128.",
+      "compression_id": 128,
+      "payload_hex": "00",
+      "expected_behavior": "Reader reports unsupported compression, not file corruption."
+    }
+  ]
+}
