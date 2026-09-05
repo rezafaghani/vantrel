@@ -1,0 +1,9 @@
+namespaces:
+  - name: vantrel-system
+    description: Platform control-plane services and shared operators.
+  - name: vantrel-data
+    description: Data ingestion, archival, validation and storage services.
+  - name: vantrel-trading
+    description: Trading, order-book and risk services.
+  - name: vantrel-observability
+    description: Metrics, logs, traces and dashboards.
