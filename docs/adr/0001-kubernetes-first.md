@@ -10,6 +10,8 @@ Vantrel is intended to run as independently deployable services with strong oper
 
 Use Kubernetes as the primary runtime model. Local development will target kind or k3d with Helm conventions.
 
+The local foundation is documented in [Local Kubernetes Development](../kubernetes/local-development.md).
+
 ## Consequences
 
 - Services must define health, readiness, configuration, persistence and graceful shutdown.
