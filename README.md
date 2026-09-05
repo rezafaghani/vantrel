@@ -53,6 +53,8 @@ Vantrel is designed around:
 - Observability
 - Kubernetes operations
 
+See [docs/architecture/platform-architecture.md](docs/architecture/platform-architecture.md) for the intended high-level platform architecture and [docs/adr](docs/adr) for architecture decisions.
+
 ## Development Workflow
 
 All development happens as small, independently reviewable pull requests.
