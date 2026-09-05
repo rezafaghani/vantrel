@@ -25,3 +25,12 @@ Run checks:
 ```sh
 go test ./...
 ```
+
+Run the CLI:
+
+```sh
+go run ./cmd/mrx inspect archive.mrx
+go run ./cmd/mrx verify archive.mrx
+go run ./cmd/mrx extract -frame 0 archive.mrx
+go run ./cmd/mrx benchmark -frames 1000 -size 256
+```
