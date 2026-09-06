@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "topics": [
+    {
+      "name": "vantrel.market.canonical.v1",
+      "owner": "market-data",
+      "purpose": "Validated canonical market events ready for durable consumers.",
+      "key": "series_id",
+      "value_contract": "contracts/proto/vantrel/market/v1/market.proto",
+      "partitions": 12,
+      "replication_factor": 3,
+      "retention_ms": 604800000,
+      "cleanup_policy": "delete",
+      "replayable": true
+    },
+    {
+      "name": "vantrel.market.validation.v1",
+      "owner": "validation",
+      "purpose": "Validation outcomes for accepted and rejected market events.",
+      "key": "canonical_event_id",
+      "value_contract": "contracts/proto/vantrel/market/v1/market.proto",
+      "partitions": 6,
+      "replication_factor": 3,
+      "retention_ms": 604800000,
+      "cleanup_policy": "delete",
+      "replayable": true
+    },
+    {
+      "name": "vantrel.market.quarantine.v1",
+      "owner": "validation",
+      "purpose": "Traceable invalid or unparsed market records requiring investigation.",
+      "key": "raw_record_id",
+      "value_contract": "future quarantine contract",
+      "partitions": 6,
+      "replication_factor": 3,
+      "retention_ms": 2592000000,
+      "cleanup_policy": "delete",
+      "replayable": true
+    },
+    {
+      "name": "vantrel.catalog.series.v1",
+      "owner": "catalog",
+      "purpose": "Auditable Catalog series metadata change events.",
+      "key": "series_id",
+      "value_contract": "future catalog event contract",
+      "partitions": 3,
+      "replication_factor": 3,
+      "retention_ms": -1,
+      "cleanup_policy": "compact",
+      "replayable": true
+    },
+    {
+      "name": "vantrel.ingestion.status.v1",
+      "owner": "ingestion",
+      "purpose": "Ingestion execution status and health events.",
+      "key": "ingestion_id",
+      "value_contract": "future ingestion status contract",
+      "partitions": 3,
+      "replication_factor": 3,
+      "retention_ms": 604800000,
+      "cleanup_policy": "delete",
+      "replayable": false
+    }
+  ]
+}

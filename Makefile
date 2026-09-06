@@ -40,6 +40,11 @@ proto-check:
 	python3 tools/check_proto_compat.py
 	python3 -m unittest tools/check_proto_compat_test.py
 
+.PHONY: kafka-check
+kafka-check:
+	python3 tools/check_kafka_topics.py
+	python3 -m unittest tools/check_kafka_topics_test.py
+
 .PHONY: go-test
 go-test:
 	cd libs/go/mrx && GOCACHE=$(GOCACHE) go test ./...
