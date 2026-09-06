@@ -53,7 +53,7 @@ Vantrel is designed around:
 - Observability
 - Kubernetes operations
 
-See [docs/architecture/platform-architecture.md](docs/architecture/platform-architecture.md) for the intended high-level platform architecture, [docs/adr](docs/adr) for architecture decisions, [docs/specs/mrx-v0.md](docs/specs/mrx-v0.md) for the draft MRX raw archive specification, [libs/go/mrx](libs/go/mrx) for the initial Go MRX library and CLI, [docs/kubernetes/local-development.md](docs/kubernetes/local-development.md) for the local Kubernetes foundation, [contracts/proto](contracts/proto) for initial canonical market contracts, and [docs/catalog](docs/catalog) for the Series Catalog core and API.
+See [docs/architecture/platform-architecture.md](docs/architecture/platform-architecture.md) for the intended high-level platform architecture, [docs/adr](docs/adr) for architecture decisions, [docs/specs/mrx-v0.md](docs/specs/mrx-v0.md) for the draft MRX raw archive specification, [libs/go/mrx](libs/go/mrx) for the initial Go MRX library and CLI, [docs/kubernetes/local-development.md](docs/kubernetes/local-development.md) for the local Kubernetes foundation, [contracts/proto](contracts/proto) for initial canonical market contracts, [docs/catalog](docs/catalog) for the Series Catalog core and API, and [docs/ingestion/sdk.md](docs/ingestion/sdk.md) for the Go ingestion SDK.
 
 ## Development Workflow
 
