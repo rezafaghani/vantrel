@@ -16,3 +16,4 @@ Current foundation:
 - Provide a deterministic synthetic market source for SDK and catalog integration tests.
 - Provide an initial ingestion raw-capture sink backed by MRX.
 - Provide initial Kafka topic registry conventions without deploying Kafka.
+- Provide an initial in-process validation engine.
