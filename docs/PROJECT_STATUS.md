@@ -14,3 +14,4 @@ Current foundation:
 - Provide initial Series Catalog core/API packages.
 - Provide an initial Go ingestion SDK.
 - Provide a deterministic synthetic market source for SDK and catalog integration tests.
+- Provide an initial ingestion raw-capture sink backed by MRX.
