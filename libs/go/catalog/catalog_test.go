@@ -89,6 +89,23 @@ func TestSeriesVersionAuditTrail(t *testing.T) {
 	}
 }
 
+func TestSearchSeries(t *testing.T) {
+	store := NewMemoryStore()
+	must(t, store.SaveProvider(Provider{ID: "energinet", DisplayName: "Energinet"}))
+	must(t, store.SaveSource(Source{ID: "energinet-api", ProviderID: "energinet", Name: "Energinet API", Protocol: "REST"}))
+	series := baseSeries("dk1_wind_actual", "DK1 wind actual")
+	series.Tags = []string{"wind", "generation"}
+	must(t, mustVersion(store.SaveSeries(series, "test", "initial")))
+
+	got, err := store.SearchSeries("generation")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(got) != 1 || got[0].ID != series.ID {
+		t.Fatalf("series=%+v", got)
+	}
+}
+
 func TestValidationRejectsBadReferences(t *testing.T) {
 	store := NewMemoryStore()
 	if err := store.SaveSource(Source{ID: "missing-provider-source", ProviderID: "missing", Name: "x", Protocol: "REST"}); !errors.Is(err, ErrNotFound) {

@@ -2,6 +2,7 @@ package catalog
 
 import (
 	"fmt"
+	"strings"
 	"sync"
 	"time"
 )
@@ -122,6 +123,19 @@ func (s *MemoryStore) AddDataProductMember(m DataProductMember) error {
 	return nil
 }
 
+func (s *MemoryStore) SearchSeries(query string) ([]Series, error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	query = strings.ToLower(strings.TrimSpace(query))
+	var out []Series
+	for _, series := range s.series {
+		if query == "" || seriesMatches(series, query) {
+			out = append(out, cloneSeries(series))
+		}
+	}
+	return out, nil
+}
+
 func (s *MemoryStore) GetSeries(id string) (Series, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
@@ -171,4 +185,19 @@ func cloneSeries(s Series) Series {
 	s.Purposes = append([]Purpose(nil), s.Purposes...)
 	s.Tags = append([]string(nil), s.Tags...)
 	return s
+}
+
+func seriesMatches(s Series, query string) bool {
+	values := []string{s.ID, s.CanonicalName, s.DisplayName, s.Description, s.AssetClass, s.SeriesType, s.Market, s.Venue, s.BiddingZone, s.Instrument, s.Commodity}
+	for _, value := range values {
+		if strings.Contains(strings.ToLower(value), query) {
+			return true
+		}
+	}
+	for _, tag := range s.Tags {
+		if strings.Contains(strings.ToLower(tag), query) {
+			return true
+		}
+	}
+	return false
 }

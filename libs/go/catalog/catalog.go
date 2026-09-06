@@ -123,6 +123,7 @@ type Store interface {
 	AddRelationship(SeriesRelationship) error
 	SaveDataProduct(DataProduct) error
 	AddDataProductMember(DataProductMember) error
+	SearchSeries(string) ([]Series, error)
 	GetSeries(string) (Series, error)
 	GetSeriesVersions(string) ([]SeriesVersion, error)
 	GetRelationships(string) ([]SeriesRelationship, error)
