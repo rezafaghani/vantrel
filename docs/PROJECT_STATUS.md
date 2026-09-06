@@ -1,12 +1,16 @@
 # Project Status
 
-Vantrel is in repository bootstrap.
+Vantrel is in early development.
 
-No production services, ingestion adapters, infrastructure deployments, trading systems, surveillance systems, ML systems or AI agents have been implemented.
+No production services, real provider adapters, full infrastructure deployments, trading systems, surveillance systems, ML systems or AI agents have been implemented.
 
-Current intent:
+Current foundation:
 
 - Establish project identity and contribution rules.
 - Document the mandatory small-PR workflow.
-- Keep the repository free of secrets, proprietary datasets and employer-specific material.
-- Prepare empty top-level directories for future focused tasks.
+- Document high-level architecture and ADRs.
+- Specify MRX v0 and provide the initial Go MRX library and CLI.
+- Define initial canonical market Protobuf contracts.
+- Provide initial Series Catalog core/API packages.
+- Provide an initial Go ingestion SDK.
+- Provide a deterministic synthetic market source for SDK and catalog integration tests.
