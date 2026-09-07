@@ -18,3 +18,4 @@ Current foundation:
 - Provide initial Kafka topic registry conventions without deploying Kafka.
 - Provide an initial in-process validation engine.
 - Provide an initial market observation storage boundary without deploying QuestDB.
+- Provide an initial QuestDB observation schema contract without deploying QuestDB.
