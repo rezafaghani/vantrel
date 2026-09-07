@@ -4,6 +4,8 @@ QuestDB is Vantrel's intended durable store for market/time-series observations.
 
 The initial Go boundary is `libs/go/marketstore`.
 
+The initial QuestDB schema contract is `contracts/questdb/market_observations.sql`.
+
 It defines:
 
 - `ActualObservation`

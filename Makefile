@@ -45,6 +45,11 @@ kafka-check:
 	python3 tools/check_kafka_topics.py
 	python3 -m unittest tools/check_kafka_topics_test.py
 
+.PHONY: questdb-schema-check
+questdb-schema-check:
+	python3 tools/check_questdb_schema.py
+	python3 -m unittest tools/check_questdb_schema_test.py
+
 .PHONY: go-test
 go-test:
 	cd libs/go/mrx && GOCACHE=$(GOCACHE) go test ./...
