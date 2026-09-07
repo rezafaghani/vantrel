@@ -19,3 +19,4 @@ Current foundation:
 - Provide an initial in-process validation engine.
 - Provide an initial market observation storage boundary without deploying QuestDB.
 - Provide an initial QuestDB observation schema contract without deploying QuestDB.
+- Provide initial QuestDB ILP line encoding without opening database connections.

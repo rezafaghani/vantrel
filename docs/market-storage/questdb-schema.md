@@ -22,3 +22,5 @@ Forecast rows use `target_time` as the designated timestamp and retain `forecast
 Actual rows use `event_time` as the designated timestamp and retain `revision`.
 
 Run `make questdb-schema-check` after changing the schema.
+
+`libs/go/marketstore.ILPWriter` writes rows using QuestDB-compatible InfluxDB Line Protocol. The writer targets an `io.Writer`; connection management is left to a later adapter task.

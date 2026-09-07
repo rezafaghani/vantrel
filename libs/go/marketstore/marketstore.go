@@ -13,6 +13,12 @@ var (
 	ErrInvalid = errors.New("marketstore: invalid observation")
 )
 
+type Lineage struct {
+	RawRecordID      string
+	CanonicalEventID string
+	IngestionID      string
+}
+
 type Quality struct {
 	State string
 	Score float64
@@ -26,6 +32,7 @@ type ActualObservation struct {
 	Unit      string
 	Quality   Quality
 	Revision  uint64
+	Lineage   Lineage
 }
 
 type ForecastObservation struct {
@@ -38,6 +45,7 @@ type ForecastObservation struct {
 	Unit          string
 	ModelVersion  string
 	Quality       Quality
+	Lineage       Lineage
 }
 
 type Query struct {
