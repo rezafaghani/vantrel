@@ -6,6 +6,8 @@ Tables:
 
 - `market_actual_observations`
 - `market_forecast_observations`
+- `market_trade_observations`
+- `market_quote_observations`
 
 The tables intentionally duplicate only runtime observation identifiers and values:
 
@@ -21,8 +23,12 @@ Forecast rows use `target_time` as the designated timestamp and retain `forecast
 
 Actual rows use `event_time` as the designated timestamp and retain `revision`.
 
+Trade rows use `trade_time` as the designated timestamp and retain `price`, `quantity`, `currency` and `instrument`.
+
+Quote rows use `quote_time` as the designated timestamp and retain `bid`, `ask`, `quantity`, `currency` and `instrument`.
+
 Run `make questdb-schema-check` after changing the schema.
 
 `libs/go/marketstore.ILPWriter` writes rows using QuestDB-compatible InfluxDB Line Protocol. The writer targets an `io.Writer`; connection management is left to a later adapter task.
 
-`libs/go/marketstore.Publisher` accepts validated ingestion canonical events and stores `actual` and `forecast` observations. Trade and quote storage remains separate future schema work.
+`libs/go/marketstore.Publisher` accepts validated ingestion canonical events and stores `actual`, `forecast`, `trade` and `quote` observations.

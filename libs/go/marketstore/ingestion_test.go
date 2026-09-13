@@ -37,8 +37,19 @@ func TestPublisherStoresValidatedSyntheticObservations(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	trades, err := store.QueryTrade(Query{SeriesID: synthetic.SeriesAppleTradePrice})
+	if err != nil {
+		t.Fatal(err)
+	}
+	quotes, err := store.QueryQuote(Query{SeriesID: synthetic.SeriesAppleQuote})
+	if err != nil {
+		t.Fatal(err)
+	}
 	if len(actuals) != 2 || len(forecasts) != 2 {
 		t.Fatalf("actuals=%d forecasts=%d", len(actuals), len(forecasts))
+	}
+	if len(trades) != 2 || len(quotes) != 2 {
+		t.Fatalf("trades=%d quotes=%d", len(trades), len(quotes))
 	}
 }
 
@@ -64,10 +75,13 @@ func TestPublisherWritesSyntheticObservationsAsILP(t *testing.T) {
 		}
 	}
 	out := buf.String()
-	if strings.Count(out, "\n") != 2 {
+	if strings.Count(out, "\n") != 4 {
 		t.Fatalf("ilp=%s", out)
 	}
-	if !strings.Contains(out, "market_actual_observations") || !strings.Contains(out, "market_forecast_observations") {
+	if !strings.Contains(out, "market_actual_observations") ||
+		!strings.Contains(out, "market_forecast_observations") ||
+		!strings.Contains(out, "market_trade_observations") ||
+		!strings.Contains(out, "market_quote_observations") {
 		t.Fatalf("ilp=%s", out)
 	}
 }

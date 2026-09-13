@@ -59,8 +59,8 @@ func Records(cfg Config) ([]ingestion.Record, error) {
 		windForecast := rounded(windActual + rng.NormFloat64()*18)
 
 		payloads := []Payload{
-			{Type: "trade", SeriesID: SeriesAppleTradePrice, EventTime: eventTime, Symbol: "AAPL", Price: tradePrice, Quantity: rounded(100 + rng.Float64()*900)},
-			{Type: "quote", SeriesID: SeriesAppleQuote, EventTime: eventTime, Symbol: "AAPL", Bid: bid, Ask: ask, Quantity: rounded(500 + rng.Float64()*1500)},
+			{Type: "trade", SeriesID: SeriesAppleTradePrice, EventTime: eventTime, Symbol: "AAPL", Price: tradePrice, Quantity: rounded(100 + rng.Float64()*900), Unit: "USD"},
+			{Type: "quote", SeriesID: SeriesAppleQuote, EventTime: eventTime, Symbol: "AAPL", Bid: bid, Ask: ask, Quantity: rounded(500 + rng.Float64()*1500), Unit: "USD"},
 			{Type: "forecast", SeriesID: SeriesDK1WindForecast, EventTime: eventTime, BiddingZone: "DK1", Value: windForecast, Unit: "MW", ForecastRunID: "synthetic-wind-run-001", IssuedAt: cfg.BaseTime, TargetTime: eventTime.Add(30 * time.Minute), HorizonMinutes: 30 + step},
 			{Type: "actual", SeriesID: SeriesDK1WindActual, EventTime: eventTime, BiddingZone: "DK1", Value: windActual, Unit: "MW"},
 		}

@@ -10,6 +10,8 @@ import (
 const (
 	actualTable   = "market_actual_observations"
 	forecastTable = "market_forecast_observations"
+	tradeTable    = "market_trade_observations"
+	quoteTable    = "market_quote_observations"
 )
 
 type ILPWriter struct {
@@ -39,6 +41,28 @@ func (w *ILPWriter) WriteForecast(obs ForecastObservation) error {
 		return err
 	}
 	_, err := io.WriteString(w.w, forecastLine(obs))
+	return err
+}
+
+func (w *ILPWriter) WriteTrade(obs TradeObservation) error {
+	if w == nil || w.w == nil {
+		return errors.New("marketstore ilp: nil writer")
+	}
+	if err := ValidateTrade(obs); err != nil {
+		return err
+	}
+	_, err := io.WriteString(w.w, tradeLine(obs))
+	return err
+}
+
+func (w *ILPWriter) WriteQuote(obs QuoteObservation) error {
+	if w == nil || w.w == nil {
+		return errors.New("marketstore ilp: nil writer")
+	}
+	if err := ValidateQuote(obs); err != nil {
+		return err
+	}
+	_, err := io.WriteString(w.w, quoteLine(obs))
 	return err
 }
 
@@ -79,6 +103,45 @@ func forecastLine(obs ForecastObservation) string {
 		stringField("quality_flags", strings.Join(obs.Quality.Flags, ",")),
 	)
 	return line(forecastTable, tags, fields, obs.TargetTime.UnixNano())
+}
+
+func tradeLine(obs TradeObservation) string {
+	tags := tags(
+		"series_id", obs.SeriesID,
+		"instrument", obs.Instrument,
+		"currency", obs.Currency,
+		"quality_state", obs.Quality.State,
+		"raw_record_id", obs.Lineage.RawRecordID,
+		"canonical_event_id", obs.Lineage.CanonicalEventID,
+		"ingestion_id", obs.Lineage.IngestionID,
+	)
+	fields := fields(
+		floatField("price", obs.Price),
+		floatField("quantity", obs.Quantity),
+		floatField("quality_score", obs.Quality.Score),
+		stringField("quality_flags", strings.Join(obs.Quality.Flags, ",")),
+	)
+	return line(tradeTable, tags, fields, obs.TradeTime.UnixNano())
+}
+
+func quoteLine(obs QuoteObservation) string {
+	tags := tags(
+		"series_id", obs.SeriesID,
+		"instrument", obs.Instrument,
+		"currency", obs.Currency,
+		"quality_state", obs.Quality.State,
+		"raw_record_id", obs.Lineage.RawRecordID,
+		"canonical_event_id", obs.Lineage.CanonicalEventID,
+		"ingestion_id", obs.Lineage.IngestionID,
+	)
+	fields := fields(
+		floatField("bid", obs.Bid),
+		floatField("ask", obs.Ask),
+		floatField("quantity", obs.Quantity),
+		floatField("quality_score", obs.Quality.Score),
+		stringField("quality_flags", strings.Join(obs.Quality.Flags, ",")),
+	)
+	return line(quoteTable, tags, fields, obs.QuoteTime.UnixNano())
 }
 
 func line(table string, tags, fields []string, timestamp int64) string {
