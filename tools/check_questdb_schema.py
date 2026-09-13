@@ -14,6 +14,8 @@ REQUIRED_TABLES = {
         "value",
         "unit",
     },
+    "market_trade_observations": {"series_id", "trade_time", "price", "quantity", "currency", "instrument"},
+    "market_quote_observations": {"series_id", "quote_time", "bid", "ask", "quantity", "currency", "instrument"},
 }
 FORBIDDEN = {"canonical_name", "display_name", "description", "license", "owner", "data_product"}
 DRIFT = {"SERIAL", "JSONB", "UUID", "ENGINE =", "MergeTree"}

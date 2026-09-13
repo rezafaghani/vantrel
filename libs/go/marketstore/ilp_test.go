@@ -52,6 +52,25 @@ func TestILPWriterWritesForecastLine(t *testing.T) {
 	}
 }
 
+func TestILPWriterWritesTradeAndQuoteLines(t *testing.T) {
+	var buf bytes.Buffer
+	writer := NewILPWriter(&buf)
+	t0 := time.Unix(1704067200, 0).UTC()
+	if err := writer.WriteTrade(TradeObservation{SeriesID: "SYN_EQ_AAPL_TRADE_PRICE", TradeTime: t0, Price: 185.12, Quantity: 100, Currency: "USD", Instrument: "AAPL"}); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteQuote(QuoteObservation{SeriesID: "SYN_EQ_AAPL_QUOTE", QuoteTime: t0, Bid: 185.1, Ask: 185.14, Quantity: 500, Currency: "USD", Instrument: "AAPL"}); err != nil {
+		t.Fatal(err)
+	}
+	out := buf.String()
+	if !strings.Contains(out, "market_trade_observations,series_id=SYN_EQ_AAPL_TRADE_PRICE,instrument=AAPL,currency=USD price=185.12,quantity=100") {
+		t.Fatalf("ilp=%s", out)
+	}
+	if !strings.Contains(out, "market_quote_observations,series_id=SYN_EQ_AAPL_QUOTE,instrument=AAPL,currency=USD bid=185.1,ask=185.14,quantity=500") {
+		t.Fatalf("ilp=%s", out)
+	}
+}
+
 func TestILPWriterRejectsInvalidObservation(t *testing.T) {
 	var buf bytes.Buffer
 	err := NewILPWriter(&buf).WriteActual(ActualObservation{})
