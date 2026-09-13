@@ -24,3 +24,5 @@ Actual rows use `event_time` as the designated timestamp and retain `revision`.
 Run `make questdb-schema-check` after changing the schema.
 
 `libs/go/marketstore.ILPWriter` writes rows using QuestDB-compatible InfluxDB Line Protocol. The writer targets an `io.Writer`; connection management is left to a later adapter task.
+
+`libs/go/marketstore.Publisher` accepts validated ingestion canonical events and stores `actual` and `forecast` observations. Trade and quote storage remains separate future schema work.
