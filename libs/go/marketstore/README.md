@@ -6,6 +6,8 @@ It keeps forecast and actual observations as separate types and exposes a small 
 
 QuestDB is the intended durable backend for market observations. `ILPWriter` encodes observations as QuestDB-compatible InfluxDB Line Protocol against an `io.Writer`, but this package does not open network connections or deploy QuestDB.
 
+`Publisher` implements the ingestion SDK publisher hook for actual and forecast canonical events.
+
 Run checks:
 
 ```sh

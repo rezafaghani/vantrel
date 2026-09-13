@@ -55,10 +55,14 @@ type Query struct {
 }
 
 type Store interface {
-	WriteActual(ActualObservation) error
-	WriteForecast(ForecastObservation) error
+	ObservationWriter
 	QueryActual(Query) ([]ActualObservation, error)
 	QueryForecast(Query) ([]ForecastObservation, error)
+}
+
+type ObservationWriter interface {
+	WriteActual(ActualObservation) error
+	WriteForecast(ForecastObservation) error
 }
 
 type MemoryStore struct {
