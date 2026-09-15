@@ -55,6 +55,14 @@ Vantrel is designed around:
 
 See [docs/architecture/platform-architecture.md](docs/architecture/platform-architecture.md) for the intended high-level platform architecture, [docs/adr](docs/adr) for architecture decisions, [docs/specs/mrx-v0.md](docs/specs/mrx-v0.md) for the draft MRX raw archive specification, [libs/go/mrx](libs/go/mrx) for the initial Go MRX library and CLI, [docs/kubernetes/local-development.md](docs/kubernetes/local-development.md) for the local Kubernetes foundation, [contracts/proto](contracts/proto) for initial canonical market contracts, [docs/kafka/event-backbone.md](docs/kafka/event-backbone.md) for Kafka topic conventions, [docs/catalog](docs/catalog) for the Series Catalog core and API, [docs/ingestion/sdk.md](docs/ingestion/sdk.md) for the Go ingestion SDK, [docs/ingestion/synthetic-market-source.md](docs/ingestion/synthetic-market-source.md) for the deterministic synthetic market source, [docs/ingestion/raw-archival-pipeline.md](docs/ingestion/raw-archival-pipeline.md) for the initial MRX raw-capture integration, [docs/validation/engine.md](docs/validation/engine.md) for the initial validation engine, and [docs/market-storage](docs/market-storage) for the market storage boundary and QuestDB schema.
 
+## Local Run
+
+Run the minimal in-memory pipeline:
+
+```sh
+make run-local-pipeline
+```
+
 ## Development Workflow
 
 All development happens as small, independently reviewable pull requests.
