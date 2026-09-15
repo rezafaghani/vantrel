@@ -21,3 +21,4 @@ Current foundation:
 - Provide an initial QuestDB observation schema contract without deploying QuestDB.
 - Provide initial QuestDB ILP line encoding without opening database connections.
 - Provide initial ingestion-to-marketstore mapping for actual, forecast, trade and quote observations.
+- Provide a minimal local pipeline runner without deploying Kafka, QuestDB or Kubernetes.
