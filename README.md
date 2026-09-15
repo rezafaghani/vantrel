@@ -63,6 +63,15 @@ Run the minimal in-memory pipeline:
 make run-local-pipeline
 ```
 
+Run the QuestDB-backed local dashboard:
+
+```sh
+make questdb-up
+make run-app
+```
+
+Then open `http://localhost:8080`.
+
 ## Development Workflow
 
 All development happens as small, independently reviewable pull requests.

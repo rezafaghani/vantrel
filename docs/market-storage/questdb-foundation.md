@@ -23,4 +23,16 @@ Rules:
 - Forecast rows carry `forecast_run_id`, `issued_at`, `target_time` and horizon.
 - Actual rows carry event time and revision.
 
-This task does not deploy QuestDB, add SQL schemas, write ILP clients, consume Kafka or persist data durably.
+Local development can start QuestDB with:
+
+```sh
+make questdb-up
+```
+
+Then run the local dashboard with:
+
+```sh
+make run-app
+```
+
+This local path creates the schema, writes synthetic market observations through QuestDB ILP-over-HTTP, and reads table counts through QuestDB's HTTP SQL API. Kafka and Kubernetes deployment remain future work.
