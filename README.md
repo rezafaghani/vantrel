@@ -72,6 +72,14 @@ make run-app
 
 Then open `http://localhost:8080`.
 
+Run the same app on local Kubernetes:
+
+```sh
+make kind-create
+make k8s-app-install
+make k8s-app-port-forward
+```
+
 ## Development Workflow
 
 All development happens as small, independently reviewable pull requests.

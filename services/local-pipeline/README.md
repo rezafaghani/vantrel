@@ -25,3 +25,10 @@ make run-app
 ```
 
 Open `http://localhost:8080` and click `Run Synthetic Batch`.
+
+Endpoints:
+
+- `GET /`
+- `GET /api/status`
+- `GET /api/latest`
+- `POST /api/run?steps=3`

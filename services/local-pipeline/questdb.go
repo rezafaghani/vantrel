@@ -13,12 +13,17 @@ import (
 )
 
 type questDB struct {
-	base   string
-	client *http.Client
+	base       string
+	schemaPath string
+	client     *http.Client
 }
 
 func (q questDB) init(ctx context.Context) error {
-	sql, err := os.ReadFile("../../contracts/questdb/market_observations.sql")
+	path := q.schemaPath
+	if path == "" {
+		path = "../../contracts/questdb/market_observations.sql"
+	}
+	sql, err := os.ReadFile(path)
 	if err != nil {
 		return err
 	}
@@ -51,12 +56,7 @@ func (q questDB) writeILP(ctx context.Context, lines string) error {
 
 func (q questDB) status(ctx context.Context) map[string]any {
 	out := map[string]any{"questdb_ok": true}
-	for name, table := range map[string]string{
-		"actuals":   "market_actual_observations",
-		"forecasts": "market_forecast_observations",
-		"trades":    "market_trade_observations",
-		"quotes":    "market_quote_observations",
-	} {
+	for name, table := range observationTables {
 		count, err := q.count(ctx, table)
 		if err != nil {
 			out["questdb_ok"] = false
@@ -64,6 +64,22 @@ func (q questDB) status(ctx context.Context) map[string]any {
 			continue
 		}
 		out[name] = count
+	}
+	return out
+}
+
+func (q questDB) latest(ctx context.Context) map[string]any {
+	out := map[string]any{}
+	for name, table := range observationTables {
+		var body struct {
+			Columns []map[string]any `json:"columns"`
+			Dataset [][]any          `json:"dataset"`
+		}
+		if err := q.query(ctx, "select * from "+table+" limit -5", &body); err != nil {
+			out[name] = []any{}
+			continue
+		}
+		out[name] = body.Dataset
 	}
 	return out
 }
@@ -86,6 +102,13 @@ func (q questDB) count(ctx context.Context, table string) (int, error) {
 	default:
 		return 0, nil
 	}
+}
+
+var observationTables = map[string]string{
+	"actuals":   "market_actual_observations",
+	"forecasts": "market_forecast_observations",
+	"trades":    "market_trade_observations",
+	"quotes":    "market_quote_observations",
 }
 
 func (q questDB) exec(ctx context.Context, sql string) error {

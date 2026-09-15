@@ -44,6 +44,22 @@ Check Vantrel namespaces:
 make k8s-status
 ```
 
+Build the local pipeline image, load it into kind, and install the app with QuestDB:
+
+```sh
+make k8s-app-install
+```
+
+Expose the dashboard:
+
+```sh
+make k8s-app-port-forward
+```
+
+Open `http://localhost:8080`.
+
+The dashboard exposes the current QuestDB status, observation counts, latest rows and a synthetic ingestion trigger.
+
 Delete the local cluster:
 
 ```sh
