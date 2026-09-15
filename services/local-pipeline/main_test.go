@@ -40,7 +40,7 @@ func TestQuestDBInitWriteAndStatus(t *testing.T) {
 	roundTrip := func(r *http.Request) *http.Response {
 		switch r.URL.Path {
 		case "/exec":
-			return response(`{"dataset":[[2]]}`)
+			return response(`{"columns":[{"name":"count"}],"dataset":[[2]]}`)
 		case "/write":
 			return response(`{}`)
 		default:
@@ -62,6 +62,13 @@ func TestQuestDBInitWriteAndStatus(t *testing.T) {
 	latest := db.latest(context.Background())
 	if len(latest) != 4 {
 		t.Fatalf("latest=%v", latest)
+	}
+}
+
+func TestRowsMapsColumnsToValues(t *testing.T) {
+	got := rows([]columnInfo{{Name: "series_id"}, {Name: "price"}}, [][]any{{"S", 12.3}})
+	if len(got) != 1 || got[0]["series_id"] != "S" || got[0]["price"] != 12.3 {
+		t.Fatalf("rows=%v", got)
 	}
 }
 

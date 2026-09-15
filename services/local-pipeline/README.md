@@ -32,3 +32,5 @@ Endpoints:
 - `GET /api/status`
 - `GET /api/latest`
 - `POST /api/run?steps=3`
+
+The dashboard renders observation counts and latest rows from QuestDB as tables.
