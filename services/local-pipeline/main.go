@@ -36,6 +36,9 @@ h1{font-size:28px;margin:0}button{padding:10px 14px;border:1px solid #151515;bac
 .card{background:white;border:1px solid #ddd;border-radius:6px;padding:16px}
 .value{font-size:28px;font-weight:700;margin-top:8px}
 pre{white-space:pre-wrap;background:#151515;color:#f7f7f4;padding:16px;border-radius:6px;overflow:auto}
+table{width:100%;border-collapse:collapse;background:white;margin:12px 0 24px}
+th,td{text-align:left;border-bottom:1px solid #ddd;padding:8px;font-size:14px}
+th{font-size:12px;text-transform:uppercase;color:#555}
 </style>
 </head>
 <body><main>
@@ -48,16 +51,25 @@ pre{white-space:pre-wrap;background:#151515;color:#f7f7f4;padding:16px;border-ra
 <div class="card">Forecasts<div class="value" id="forecasts">...</div></div>
 </section>
 <h2>Last Run</h2><pre id="last">No run yet.</pre>
-<h2>Latest Rows</h2><pre id="latest">...</pre>
+<h2>Latest Rows</h2><div id="latest">...</div>
 </main>
 <script>
 async function refresh(){
   const r=await fetch('/api/status'); const s=await r.json();
   questdb.textContent=s.questdb_ok?'OK':'Down';
   trades.textContent=s.trades; quotes.textContent=s.quotes; actuals.textContent=s.actuals; forecasts.textContent=s.forecasts;
-  const latestResp=await fetch('/api/latest'); latest.textContent=JSON.stringify(await latestResp.json(),null,2);
+  const latestResp=await fetch('/api/latest'); renderLatest(await latestResp.json());
 }
 run.onclick=async()=>{const r=await fetch('/api/run?steps=3',{method:'POST'}); last.textContent=JSON.stringify(await r.json(),null,2); refresh();}
+function renderLatest(data){
+ latest.innerHTML=['trades','quotes','actuals','forecasts'].map(name=>{
+    const rows=data[name]||[];
+    if(!rows.length) return '<h3>'+escapeHTML(name)+'</h3><p>No rows.</p>';
+    const cols=Object.keys(rows[0]);
+    return '<h3>'+escapeHTML(name)+'</h3><table><thead><tr>'+cols.map(c=>'<th>'+escapeHTML(c)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(row=>'<tr>'+cols.map(c=>'<td>'+escapeHTML(row[c]??'')+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+  }).join('');
+}
+function escapeHTML(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 refresh();
 </script></body></html>`))
 

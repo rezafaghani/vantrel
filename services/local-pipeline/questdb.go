@@ -72,14 +72,32 @@ func (q questDB) latest(ctx context.Context) map[string]any {
 	out := map[string]any{}
 	for name, table := range observationTables {
 		var body struct {
-			Columns []map[string]any `json:"columns"`
-			Dataset [][]any          `json:"dataset"`
+			Columns []columnInfo `json:"columns"`
+			Dataset [][]any      `json:"dataset"`
 		}
 		if err := q.query(ctx, "select * from "+table+" limit -5", &body); err != nil {
 			out[name] = []any{}
 			continue
 		}
-		out[name] = body.Dataset
+		out[name] = rows(body.Columns, body.Dataset)
+	}
+	return out
+}
+
+type columnInfo struct {
+	Name string `json:"name"`
+}
+
+func rows(columns []columnInfo, dataset [][]any) []map[string]any {
+	out := make([]map[string]any, 0, len(dataset))
+	for _, values := range dataset {
+		row := map[string]any{}
+		for i, column := range columns {
+			if i < len(values) {
+				row[column.Name] = values[i]
+			}
+		}
+		out = append(out, row)
 	}
 	return out
 }
