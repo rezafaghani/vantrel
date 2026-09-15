@@ -6,12 +6,16 @@ HELM_NAMESPACE ?= default
 GOCACHE ?= /tmp/vantrel-go-cache
 QUESTDB_IMAGE ?= docker.io/questdb/questdb:10.0.1
 QUESTDB_CONTAINER ?= vantrel-questdb
+LOCAL_PIPELINE_IMAGE ?= localhost/vantrel-local-pipeline:dev
 APP_ADDR ?= :8080
 
 .PHONY: k8s-check-tools
 k8s-check-tools:
 	command -v kubectl
 	command -v kind
+
+.PHONY: helm-check-tools
+helm-check-tools:
 	command -v helm
 
 .PHONY: kind-create
@@ -23,15 +27,15 @@ kind-delete:
 	kind delete cluster --name $(KIND_CLUSTER)
 
 .PHONY: helm-lint
-helm-lint:
+helm-lint: helm-check-tools
 	helm lint $(HELM_CHART)
 
 .PHONY: helm-template
-helm-template:
+helm-template: helm-check-tools
 	helm template $(HELM_RELEASE) $(HELM_CHART)
 
 .PHONY: helm-install
-helm-install: k8s-check-tools
+helm-install: k8s-check-tools helm-check-tools
 	helm upgrade --install $(HELM_RELEASE) $(HELM_CHART) --namespace $(HELM_NAMESPACE)
 
 .PHONY: k8s-status
@@ -93,3 +97,25 @@ questdb-down:
 .PHONY: run-app
 run-app:
 	cd services/local-pipeline && GOCACHE=$(GOCACHE) go run . -serve -addr $(APP_ADDR)
+
+.PHONY: app-image-build
+app-image-build:
+	podman build -f services/local-pipeline/Dockerfile -t $(LOCAL_PIPELINE_IMAGE) .
+
+.PHONY: kind-load-app-image
+kind-load-app-image: app-image-build
+	mkdir -p .vantrel
+	podman save $(LOCAL_PIPELINE_IMAGE) -o .vantrel/local-pipeline-image.tar.tmp
+	mv -f .vantrel/local-pipeline-image.tar.tmp .vantrel/local-pipeline-image.tar
+	kind load image-archive .vantrel/local-pipeline-image.tar --name $(KIND_CLUSTER)
+
+.PHONY: k8s-app-install
+k8s-app-install: kind-load-app-image
+	kubectl apply -f deployments/kubernetes/local-app.yaml
+	kubectl -n vantrel-data rollout restart deploy/local-pipeline
+	kubectl -n vantrel-data rollout status deploy/questdb --timeout=180s
+	kubectl -n vantrel-data rollout status deploy/local-pipeline --timeout=180s
+
+.PHONY: k8s-app-port-forward
+k8s-app-port-forward:
+	kubectl -n vantrel-data port-forward svc/local-pipeline 8080:8080

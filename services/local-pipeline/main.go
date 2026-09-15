@@ -48,12 +48,14 @@ pre{white-space:pre-wrap;background:#151515;color:#f7f7f4;padding:16px;border-ra
 <div class="card">Forecasts<div class="value" id="forecasts">...</div></div>
 </section>
 <h2>Last Run</h2><pre id="last">No run yet.</pre>
+<h2>Latest Rows</h2><pre id="latest">...</pre>
 </main>
 <script>
 async function refresh(){
   const r=await fetch('/api/status'); const s=await r.json();
   questdb.textContent=s.questdb_ok?'OK':'Down';
   trades.textContent=s.trades; quotes.textContent=s.quotes; actuals.textContent=s.actuals; forecasts.textContent=s.forecasts;
+  const latestResp=await fetch('/api/latest'); latest.textContent=JSON.stringify(await latestResp.json(),null,2);
 }
 run.onclick=async()=>{const r=await fetch('/api/run?steps=3',{method:'POST'}); last.textContent=JSON.stringify(await r.json(),null,2); refresh();}
 refresh();
@@ -64,9 +66,10 @@ func main() {
 	serve := flag.Bool("serve", false, "serve dashboard and API")
 	addr := flag.String("addr", ":8080", "HTTP listen address")
 	questdb := flag.String("questdb", "http://127.0.0.1:9000", "QuestDB HTTP base URL")
+	schema := flag.String("schema", "../../contracts/questdb/market_observations.sql", "QuestDB schema SQL path")
 	flag.Parse()
 	if *serve {
-		if err := serveApp(*addr, *questdb); err != nil {
+		if err := serveApp(*addr, *questdb, *schema); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
@@ -120,8 +123,8 @@ func runPipeline(ctx context.Context, steps int, now time.Time, publisher ingest
 	return raw.Len(), nil
 }
 
-func serveApp(addr, questdbURL string) error {
-	db := questDB{base: strings.TrimRight(questdbURL, "/"), client: http.DefaultClient}
+func serveApp(addr, questdbURL, schemaPath string) error {
+	db := questDB{base: strings.TrimRight(questdbURL, "/"), schemaPath: schemaPath, client: http.DefaultClient}
 	if err := db.init(context.Background()); err != nil {
 		return err
 	}
@@ -135,6 +138,9 @@ func newMux(db questDB) *http.ServeMux {
 	})
 	mux.HandleFunc("/api/status", func(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, db.status(r.Context()))
+	})
+	mux.HandleFunc("/api/latest", func(w http.ResponseWriter, r *http.Request) {
+		writeJSON(w, db.latest(r.Context()))
 	})
 	mux.HandleFunc("/api/run", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {

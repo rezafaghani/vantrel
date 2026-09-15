@@ -7,3 +7,16 @@ namespaces:
     description: Trading, order-book and risk services.
   - name: vantrel-observability
     description: Metrics, logs, traces and dashboards.
+
+questdb:
+  enabled: true
+  image: docker.io/questdb/questdb:10.0.1
+  namespace: vantrel-data
+  storage: 2Gi
+
+localPipeline:
+  enabled: true
+  image: localhost/vantrel-local-pipeline:dev
+  imagePullPolicy: IfNotPresent
+  namespace: vantrel-data
+  replicas: 1

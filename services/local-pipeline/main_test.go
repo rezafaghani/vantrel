@@ -59,6 +59,10 @@ func TestQuestDBInitWriteAndStatus(t *testing.T) {
 	if status["questdb_ok"] != true || status["trades"] != 2 {
 		t.Fatalf("status=%v", status)
 	}
+	latest := db.latest(context.Background())
+	if len(latest) != 4 {
+		t.Fatalf("latest=%v", latest)
+	}
 }
 
 func TestRunEndpointRequiresPost(t *testing.T) {
