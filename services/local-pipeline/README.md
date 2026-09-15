@@ -16,3 +16,12 @@ Run:
 ```sh
 go run . -steps 3
 ```
+
+QuestDB-backed dashboard:
+
+```sh
+make questdb-up
+make run-app
+```
+
+Open `http://localhost:8080` and click `Run Synthetic Batch`.

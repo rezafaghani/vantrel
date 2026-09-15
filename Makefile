@@ -4,6 +4,9 @@ HELM_RELEASE ?= vantrel-platform
 HELM_CHART ?= charts/vantrel-platform
 HELM_NAMESPACE ?= default
 GOCACHE ?= /tmp/vantrel-go-cache
+QUESTDB_IMAGE ?= docker.io/questdb/questdb:10.0.1
+QUESTDB_CONTAINER ?= vantrel-questdb
+APP_ADDR ?= :8080
 
 .PHONY: k8s-check-tools
 k8s-check-tools:
@@ -77,3 +80,16 @@ go-vet:
 .PHONY: run-local-pipeline
 run-local-pipeline:
 	cd services/local-pipeline && GOCACHE=$(GOCACHE) go run . -steps 3
+
+.PHONY: questdb-up
+questdb-up:
+	mkdir -p .vantrel/questdb
+	podman run -d --replace --name $(QUESTDB_CONTAINER) -p 9000:9000 -p 9003:9003 -v $(PWD)/.vantrel/questdb:/var/lib/questdb:Z $(QUESTDB_IMAGE)
+
+.PHONY: questdb-down
+questdb-down:
+	podman stop $(QUESTDB_CONTAINER)
+
+.PHONY: run-app
+run-app:
+	cd services/local-pipeline && GOCACHE=$(GOCACHE) go run . -serve -addr $(APP_ADDR)
